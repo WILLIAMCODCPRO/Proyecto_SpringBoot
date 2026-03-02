@@ -8,6 +8,8 @@ import com.s1.gestion_producto.service.DetalleVentaService;
 import com.s1.gestion_producto.service.impl.DetalleVentaServicelmpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -25,31 +27,71 @@ public class DetalleVentaController {
 
     @Operation(summary = "Permite Guarda los dettalles de venta", description = "Guarda los detalles de venta en la base de datos")
     @PostMapping
-    public ResponseEntity<DetalleVentaResponseDTO> guardar(@Parameter(description = "Id de Detalle de venta a guardar", example = "1") @RequestBody DetalleVentaRequestDTO dto){
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "201",
+                            description = "Detalle venta creado exitosamente"),
+                    @ApiResponse(responseCode = "400",
+                            description = "Datos no válidos / body mal estructurado")
+            }
+    )
+    public ResponseEntity<DetalleVentaResponseDTO> guardar(@Parameter(description = " Detalle de venta a guardar") @RequestBody DetalleVentaRequestDTO dto){
         return ResponseEntity.status(HttpStatus.CREATED).body(detalleVentaService.guardarProducto(dto));
     }
 
     @Operation(summary = "Permite actualizar los dettalles de venta", description = "Actualiza los detalles de venta en la base de datos")
     @PutMapping("/{id}")
-    public ResponseEntity<DetalleVentaResponseDTO> actualizar(@RequestBody DetalleVentaRequestDTO dto,@PathVariable Long id){
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "201",
+                            description = "Detalle venta creado exitosamente"),
+                    @ApiResponse(responseCode = "400",
+                            description = "Datos no válidos / body mal estructurado")
+            }
+    )
+    public ResponseEntity<DetalleVentaResponseDTO> actualizar(@Parameter(description = "Id de Detalle de venta a actualizar", example = "1") @RequestBody DetalleVentaRequestDTO dto,@PathVariable Long id){
         return ResponseEntity.ok().body(detalleVentaService.actualizarProducto(dto,id));
     }
 
     @Operation(summary = "Permite listar los dettalles de venta", description = "Listar los detalles de venta de la base de datos")
     @GetMapping
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "201",
+                            description = "Detalle venta creado exitosamente"),
+                    @ApiResponse(responseCode = "400",
+                            description = "Datos no válidos / body mal estructurado")
+            }
+    )
     public ResponseEntity<List<DetalleVentaResponseDTO>> listarTodos(){
         return ResponseEntity.ok().body(detalleVentaService.buscarTodos());
     }
 
     @Operation(summary = "Permite buscar por id los dettalles de venta", description = "Buscar por id los detalles de venta en la base de datos")
     @GetMapping("/{id}")
-    public ResponseEntity<DetalleVentaResponseDTO> buscarId(@PathVariable Long id){
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "201",
+                            description = "Detalle venta creado exitosamente"),
+                    @ApiResponse(responseCode = "400",
+                            description = "Datos no válidos / body mal estructurado")
+            }
+    )
+    public ResponseEntity<DetalleVentaResponseDTO> buscarId(@Parameter(description = "Id de Detalle de venta a buscar", example = "1") @PathVariable Long id){
         return ResponseEntity.ok().body(detalleVentaService.buscarPorId(id));
     }
 
     @Operation(summary = "Permite eliminar por id los dettalles de venta", description = "Eliminar por id los detalles de venta en la base de datos")
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> eliminar(@PathVariable Long id){
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "201",
+                            description = "Detalle venta creado exitosamente"),
+                    @ApiResponse(responseCode = "400",
+                            description = "Datos no válidos / body mal estructurado")
+            }
+    )
+    public ResponseEntity<Void> eliminar(@Parameter(description = "Id de Detalle de venta a eliminar", example = "1") @PathVariable Long id){
         detalleVentaService.eliminarDetalle(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
