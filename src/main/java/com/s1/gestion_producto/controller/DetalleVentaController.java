@@ -6,13 +6,16 @@ import com.s1.gestion_producto.dto.response.DetalleVentaResponseDTO;
 import com.s1.gestion_producto.dto.response.ProductoResponseDTO;
 import com.s1.gestion_producto.service.DetalleVentaService;
 import com.s1.gestion_producto.service.impl.DetalleVentaServicelmpl;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
+@Tag(name = "DetalleVenta", description = "Procesa todo lo relacionado a DetalleVenta")
 @RestController
 @RequestMapping("/api/detalleventa")
 @RequiredArgsConstructor
@@ -20,26 +23,31 @@ public class DetalleVentaController {
 
     private final DetalleVentaServicelmpl detalleVentaService;
 
+    @Operation(summary = "Permite Guarda los dettalles de venta", description = "Guarda los detalles de venta en la base de datos")
     @PostMapping
-    public ResponseEntity<DetalleVentaResponseDTO> guardar(@RequestBody DetalleVentaRequestDTO dto){
+    public ResponseEntity<DetalleVentaResponseDTO> guardar(@Parameter(description = "Id de Detalle de venta a guardar", example = "1") @RequestBody DetalleVentaRequestDTO dto){
         return ResponseEntity.status(HttpStatus.CREATED).body(detalleVentaService.guardarProducto(dto));
     }
 
+    @Operation(summary = "Permite actualizar los dettalles de venta", description = "Actualiza los detalles de venta en la base de datos")
     @PutMapping("/{id}")
     public ResponseEntity<DetalleVentaResponseDTO> actualizar(@RequestBody DetalleVentaRequestDTO dto,@PathVariable Long id){
         return ResponseEntity.ok().body(detalleVentaService.actualizarProducto(dto,id));
     }
 
+    @Operation(summary = "Permite listar los dettalles de venta", description = "Listar los detalles de venta de la base de datos")
     @GetMapping
     public ResponseEntity<List<DetalleVentaResponseDTO>> listarTodos(){
         return ResponseEntity.ok().body(detalleVentaService.buscarTodos());
     }
 
+    @Operation(summary = "Permite buscar por id los dettalles de venta", description = "Buscar por id los detalles de venta en la base de datos")
     @GetMapping("/{id}")
     public ResponseEntity<DetalleVentaResponseDTO> buscarId(@PathVariable Long id){
         return ResponseEntity.ok().body(detalleVentaService.buscarPorId(id));
     }
 
+    @Operation(summary = "Permite eliminar por id los dettalles de venta", description = "Eliminar por id los detalles de venta en la base de datos")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> eliminar(@PathVariable Long id){
         detalleVentaService.eliminarDetalle(id);
