@@ -11,9 +11,11 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,6 +23,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/detalleventa")
 @RequiredArgsConstructor
+@Validated
 public class DetalleVentaController {
 
     private final DetalleVentaServicelmpl detalleVentaService;
@@ -35,7 +38,7 @@ public class DetalleVentaController {
                             description = "Datos no válidos / body mal estructurado")
             }
     )
-    public ResponseEntity<DetalleVentaResponseDTO> guardar(@Parameter(description = " Detalle de venta a guardar") @RequestBody DetalleVentaRequestDTO dto){
+    public ResponseEntity<DetalleVentaResponseDTO> guardar(@Valid @Parameter(description = " Detalle de venta a guardar") @RequestBody DetalleVentaRequestDTO dto){
         return ResponseEntity.status(HttpStatus.CREATED).body(detalleVentaService.guardarProducto(dto));
     }
 
@@ -49,7 +52,7 @@ public class DetalleVentaController {
                             description = "Datos no válidos / body mal estructurado")
             }
     )
-    public ResponseEntity<DetalleVentaResponseDTO> actualizar(@Parameter(description = "Id de Detalle de venta a actualizar", example = "1") @RequestBody DetalleVentaRequestDTO dto,@PathVariable Long id){
+    public ResponseEntity<DetalleVentaResponseDTO> actualizar(@Valid @Parameter(description = "Id de Detalle de venta a actualizar", example = "1") @RequestBody DetalleVentaRequestDTO dto,@PathVariable Long id){
         return ResponseEntity.ok().body(detalleVentaService.actualizarProducto(dto,id));
     }
 
@@ -77,7 +80,7 @@ public class DetalleVentaController {
                             description = "Datos no válidos / body mal estructurado")
             }
     )
-    public ResponseEntity<DetalleVentaResponseDTO> buscarId(@Parameter(description = "Id de Detalle de venta a buscar", example = "1") @PathVariable Long id){
+    public ResponseEntity<DetalleVentaResponseDTO> buscarId(@Valid @Parameter(description = "Id de Detalle de venta a buscar", example = "1") @PathVariable Long id){
         return ResponseEntity.ok().body(detalleVentaService.buscarPorId(id));
     }
 
@@ -91,7 +94,7 @@ public class DetalleVentaController {
                             description = "Datos no válidos / body mal estructurado")
             }
     )
-    public ResponseEntity<Void> eliminar(@Parameter(description = "Id de Detalle de venta a eliminar", example = "1") @PathVariable Long id){
+    public ResponseEntity<Void> eliminar(@Valid @Parameter(description = "Id de Detalle de venta a eliminar", example = "1") @PathVariable Long id){
         detalleVentaService.eliminarDetalle(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

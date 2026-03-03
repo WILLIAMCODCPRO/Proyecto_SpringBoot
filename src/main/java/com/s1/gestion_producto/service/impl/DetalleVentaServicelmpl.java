@@ -14,6 +14,7 @@ import com.s1.gestion_producto.repository.DetalleVentaRepository;
 import com.s1.gestion_producto.repository.ProductoRepository;
 import com.s1.gestion_producto.repository.VentaRepository;
 import com.s1.gestion_producto.service.DetalleVentaService;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -32,8 +33,8 @@ public class DetalleVentaServicelmpl implements DetalleVentaService {
 
     @Override
     public DetalleVentaResponseDTO guardarProducto(DetalleVentaRequestDTO dto) {
-        Producto p = productoRepository.findById(dto.productoId()).orElseThrow(()->new  RuntimeException("eRROR NO EXISTE DICO producto"));
-        Venta v = ventaRepository.findById(dto.ventaId()).orElseThrow(() -> new RuntimeException("Error no existe dicha venta"));
+        Producto p = productoRepository.findById(dto.productoId()).orElseThrow(()->new EntityNotFoundException("eRROR NO EXISTE DICO producto"));
+        Venta v = ventaRepository.findById(dto.ventaId()).orElseThrow(() -> new EntityNotFoundException("Error no existe dicha venta"));
         DetalleVenta dv = detalleVentaMapper.DTOAEntidad(dto,p,v);
         DetalleVenta dv_insertada = detalleVentaRepository.save(dv);
         ProductoResponseDTO dtoProducto =productoMapper.entidadADTO(p);
@@ -43,9 +44,9 @@ public class DetalleVentaServicelmpl implements DetalleVentaService {
 
     @Override
     public DetalleVentaResponseDTO actualizarProducto(DetalleVentaRequestDTO dto, Long id) {
-       DetalleVenta dv = detalleVentaRepository.findById(id).orElseThrow(()->new RuntimeException("No existe"));
-       Producto p = productoRepository.findById(dto.productoId()).orElseThrow(()->new  RuntimeException("eRROR NO EXISTE DICO producto"));
-       Venta v = ventaRepository.findById(dto.ventaId()).orElseThrow(() -> new RuntimeException("Error no existe dicha venta"));
+       DetalleVenta dv = detalleVentaRepository.findById(id).orElseThrow(()->new EntityNotFoundException("No existe"));
+       Producto p = productoRepository.findById(dto.productoId()).orElseThrow(()->new  EntityNotFoundException("eRROR NO EXISTE DICO producto"));
+       Venta v = ventaRepository.findById(dto.ventaId()).orElseThrow(() -> new EntityNotFoundException("Error no existe dicha venta"));
        detalleVentaMapper.actualizarEntidadDesdeDTO(dv,dto,p,v);
        DetalleVenta dv_actualizada = detalleVentaRepository.save(dv);
        ProductoResponseDTO dtoProducto = productoMapper.entidadADTO(p);
@@ -56,15 +57,15 @@ public class DetalleVentaServicelmpl implements DetalleVentaService {
     @Override
     public List<DetalleVentaResponseDTO> buscarTodos() {
         return detalleVentaRepository.findAll().stream().map(
-                dato -> detalleVentaMapper.entidadADTO(dato,productoMapper.entidadADTO(productoRepository.findById(dato.getProducto().getId()).orElseThrow(()->new RuntimeException("No existe el producto"))), ventaMapper.entidadADTO(ventaRepository.findById(dato.getVenta().getId()).orElseThrow(()->new RuntimeException("No existe el producto"))))).toList();
+                dato -> detalleVentaMapper.entidadADTO(dato,productoMapper.entidadADTO(productoRepository.findById(dato.getProducto().getId()).orElseThrow(()->new EntityNotFoundException("No existe el producto"))), ventaMapper.entidadADTO(ventaRepository.findById(dato.getVenta().getId()).orElseThrow(()->new EntityNotFoundException("No existe el producto"))))).toList();
     }
 
     @Override
     public DetalleVentaResponseDTO buscarPorId(Long id) {
-        DetalleVenta dt = detalleVentaRepository.findById(id).orElseThrow(()-> new RuntimeException("No existe venta"));
-        Producto producto = productoRepository.findById(dt.getProducto().getId()).orElseThrow(()->new RuntimeException("no existe el producto"));
+        DetalleVenta dt = detalleVentaRepository.findById(id).orElseThrow(()-> new EntityNotFoundException("No existe venta"));
+        Producto producto = productoRepository.findById(dt.getProducto().getId()).orElseThrow(()->new EntityNotFoundException("no existe el producto"));
         ProductoResponseDTO productoR = productoMapper.entidadADTO(producto);
-        Venta venta = ventaRepository.findById(dt.getVenta().getId()).orElseThrow(()->new RuntimeException("no existe la venta"));
+        Venta venta = ventaRepository.findById(dt.getVenta().getId()).orElseThrow(()->new EntityNotFoundException("no existe la venta"));
         VentaResponseDTO ventaR = ventaMapper.entidadADTO(venta);
         return detalleVentaMapper.entidadADTO(dt,productoR,ventaR);
     }

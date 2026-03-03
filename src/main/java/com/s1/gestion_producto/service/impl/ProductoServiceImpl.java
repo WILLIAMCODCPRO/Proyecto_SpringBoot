@@ -6,6 +6,7 @@ import com.s1.gestion_producto.mapper.ProductoMapper;
 import com.s1.gestion_producto.model.Producto;
 import com.s1.gestion_producto.repository.ProductoRepository;
 import com.s1.gestion_producto.service.ProductoService;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -27,7 +28,7 @@ public class ProductoServiceImpl implements ProductoService {
 
     @Override
     public ProductoResponseDTO actualizarProducto(ProductoRequestDTO dto, Long id) {
-        Producto p = productoRepository.findById(id).orElseThrow(()->new RuntimeException("No existe dicho producto"));
+        Producto p = productoRepository.findById(id).orElseThrow(()->new EntityNotFoundException("No existe dicho producto"));
         productoMapper.actualizarEntidadDesdeDTO(p,dto);
         Producto p_actualizada = productoRepository.save(p);
         return productoMapper.entidadADTO(p_actualizada);
@@ -41,13 +42,13 @@ public class ProductoServiceImpl implements ProductoService {
 
     @Override
     public ProductoResponseDTO buscarPorId(Long id) {
-        Producto p = productoRepository.findById(id).orElseThrow(()-> new RuntimeException("No existe dicho producto"));
+        Producto p = productoRepository.findById(id).orElseThrow(()-> new EntityNotFoundException("No existe dicho producto"));
         return productoMapper.entidadADTO(p);
     }
 
     @Override
     public void eliminarProducto(Long id) {
-        Producto p= productoRepository.findById(id).orElseThrow(()->new RuntimeException("No existe dicho producto a eliminar"));
+        Producto p= productoRepository.findById(id).orElseThrow(()->new EntityNotFoundException("No existe dicho producto a eliminar"));
         productoRepository.delete(p);
     }
 }

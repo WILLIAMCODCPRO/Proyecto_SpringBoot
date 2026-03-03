@@ -10,6 +10,7 @@ import com.s1.gestion_producto.model.Producto;
 import com.s1.gestion_producto.model.Venta;
 import com.s1.gestion_producto.repository.VentaRepository;
 import com.s1.gestion_producto.service.VentaService;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -30,7 +31,7 @@ public class VentaServicelmpl implements VentaService {
 
     @Override
     public VentaResponseDTO actualizarVenta(VentaRequestDTO dto, Long id) {
-        Venta v = ventaRepository.findById(id).orElseThrow(()->new RuntimeException("No existe dicha venta"));
+        Venta v = ventaRepository.findById(id).orElseThrow(()->new EntityNotFoundException("No existe dicha venta"));
         ventaMapper.actualizarEntidadDesdeDTO(v,dto);
         Venta v_actualizada = ventaRepository.save(v);
         return ventaMapper.entidadADTO(v_actualizada);
@@ -44,13 +45,13 @@ public class VentaServicelmpl implements VentaService {
 
     @Override
     public VentaResponseDTO buscarPorId(Long id) {
-        Venta v = ventaRepository.findById(id).orElseThrow(()-> new RuntimeException("No existe dicha venta"));
+        Venta v = ventaRepository.findById(id).orElseThrow(()-> new EntityNotFoundException("No existe dicha venta"));
         return ventaMapper.entidadADTO(v);
     }
 
     @Override
     public void eliminarVenta(Long id) {
-        Venta v = ventaRepository.findById(id).orElseThrow(()->new RuntimeException("No existe dicha venta a eliminar"));
+        Venta v = ventaRepository.findById(id).orElseThrow(()->new EntityNotFoundException("No existe dicha venta a eliminar"));
         ventaRepository.delete(v);
     }
 }
