@@ -72,6 +72,7 @@ public class DetalleVentaServicelmpl implements DetalleVentaService {
 
     @Override
     public void eliminarDetalle(Long id) {
-
+        DetalleVenta dv= detalleVentaRepository.findById(id).orElseThrow(()->new EntityNotFoundException("No existe dicha venta a eliminar"));
+        detalleVentaRepository.delete(dv);
     }
 }

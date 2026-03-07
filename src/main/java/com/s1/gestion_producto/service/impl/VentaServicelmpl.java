@@ -14,6 +14,8 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -32,7 +34,7 @@ public class VentaServicelmpl implements VentaService {
     @Override
     public VentaResponseDTO actualizarVenta(VentaRequestDTO dto, Long id) {
         Venta v = ventaRepository.findById(id).orElseThrow(()->new EntityNotFoundException("No existe dicha venta"));
-        ventaMapper.actualizarEntidadDesdeDTO(v,dto);
+        ventaMapper.actualizarEntidadDesdeDTO(v,new VentaRequestDTO(LocalDateTime.now(), dto.total()));
         Venta v_actualizada = ventaRepository.save(v);
         return ventaMapper.entidadADTO(v_actualizada);
     }

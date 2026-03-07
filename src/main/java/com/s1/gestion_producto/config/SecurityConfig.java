@@ -2,10 +2,16 @@ package com.s1.gestion_producto.config;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.*;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.List;
 
 @Configuration// Le digo a Spring que esta clase es de configuración
 @RequiredArgsConstructor
@@ -24,6 +30,8 @@ public class SecurityConfig {
          * sino que se define un SecurityFilterChain como Bean.
          */
         return http
+                // ESTA LÍNEA ES NUEVA PARA EL CORS
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 // Desactivo CSRF porque mi API es REST y trabaja con JWT (stateless).
                 // CSRF se usa más cuando hay sesiones y formularios.
                 .csrf(csrf -> csrf.disable())
@@ -38,6 +46,8 @@ public class SecurityConfig {
                         // Permito acceso libre al login.
                         // Si lo protegiera, el usuario necesitaría token para obtener token.
                         .requestMatchers("/auth/login").permitAll()
+                        //Esta me permite acceso OPTIONS, desde el frotend, evitando el CORS
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         // Permito endpoints públicos de persona.
                         // Esto lo hago para mostrar diferencia entre public y private.
                         .requestMatchers("/api/persona/public/**").permitAll()
@@ -61,5 +71,23 @@ public class SecurityConfig {
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 // Finalmente construyo la configuración
                 .build();
+    }
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+
+        CorsConfiguration config = new CorsConfiguration();
+
+        config.setAllowedOrigins(List.of("http://127.0.0.1:5500", "http://localhost:5500"));
+        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        config.setAllowedHeaders(List.of("*"));
+        config.setAllowCredentials(true);
+
+        UrlBasedCorsConfigurationSource source =
+                new UrlBasedCorsConfigurationSource();
+
+        source.registerCorsConfiguration("/**", config);
+
+        return source;
     }
 }

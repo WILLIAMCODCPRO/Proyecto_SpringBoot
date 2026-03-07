@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+     <h2>Pruebas API Venta</h2>
+
+    <hr>
+
+    <h3>GET por ID</h3>
+    <input type="number" id="getId" placeholder="ID">
+    <button onclick="testGetById()">Consultar</button>
+
+    <hr>
+
+    <h3>Listar todos</h3>
+    <button onclick="testBuscar()">Buscar</button>
+
+    <hr>
+
+    <h3>Crear Venta (POST)</h3>
+    <input type="text" id="postTotal" placeholder="Total">
+    <button onclick="testPost()">Crear</button>
+
+    <hr>
+
+    <h3>Actualizar Venta (PUT)</h3>
+    <input type="number" id="putId" placeholder="ID">
+    <input type="text" id="putTotal" placeholder="Total">
+    <button onclick="testPut()">Actualizar</button>
+
+    <hr>
+
+    <h3>Eliminar Venta (DELETE)</h3>
+    <input type="number" id="deleteId" placeholder="ID">
+    <button onclick="testDelete()">Eliminar</button>
+
+    <hr>
+
+    <pre id="resultado"></pre>
+
+    <script src="venta.js"></script>
+
+    <script>
+
+        function testGetById() {
+            const id = document.getElementById("getId").value;
+
+            getById(id)
+                .then(data => mostrar(data))
+                .catch(error => alert(error));
+        }
+
+        function testBuscar() {
+            listar()
+                .then(data => mostrar(data))
+                .catch(error => alert(error));
+        }
+
+        function testPost() {
+            const total = document.getElementById("postTotal").value;
+            crear(total)
+                .then(data => mostrar(data))
+                .catch(error => alert(error));
+        }
+
+        function testPut() {
+            const id = document.getElementById("putId").value;
+            const total = document.getElementById("putTotal").value;
+            actualizarPersonalizada(id,total)
+                .then(data => mostrar(data))
+                .catch(error => alert(error));
+        }
+
+        function testDelete() {
+            const id = document.getElementById("deleteId").value;
+
+            eliminar(id)
+                .then(() => mostrar("Eliminado correctamente"))
+                .catch(error => alert(error));
+        }
+
+        function mostrar(data) {
+            document.getElementById("resultado").textContent =
+                JSON.stringify(data, null, 2);
+        }
+    </script>
+</body>
+</html>
