@@ -50,7 +50,8 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         // Permito endpoints públicos de persona.
                         // Esto lo hago para mostrar diferencia entre public y private.
-                        .requestMatchers("/api/persona/public/**").permitAll()
+                        .requestMatchers("/swagger-ui/**",
+                                "/v3/api-docs/**").permitAll()
                         // Todo lo demás requiere autenticación.
                         // Si no mandan token válido, no entra.
                         .anyRequest().authenticated()
